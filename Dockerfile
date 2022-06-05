@@ -21,7 +21,8 @@ RUN if [ "$ENV" = "dev" ]; then apt-get update -y && apt-get install -y git; fi
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock /app/
-RUN if [ "$ENV" != "dev" ]; then poetry install --no-dev; else poetry install && pre-commit install ; fi
+COPY .pre-commit-config.yaml .
+RUN if [ "$ENV" != "dev" ]; then poetry install --no-dev; else poetry install && git init . && pre-commit install-hooks; fi
 RUN apt-get update -y && apt-get install -y build-essential
 
 COPY . .
