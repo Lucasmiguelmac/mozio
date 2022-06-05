@@ -26,3 +26,11 @@ repos:
         language: python
         types: [python]
         args: ["--line-length=120"]
+      - id: pytest-check
+        name: Run pytest tests
+        stages: [commit]
+        types: [python]
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true
