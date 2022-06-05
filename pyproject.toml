@@ -15,23 +15,24 @@ idna = "^3.3"
 django-phonenumber-field = "^6.1.0"
 phonenumbers = "^8.12.49"
 babel = "^2.10.1"
-pytest = "^7.1.2"
-pytest-django = "^4.5.2"
-pytest-cov = "^3.0.0"
-model_bakery = "^1.5.0"
-django-mock-queries = "^2.1.7"
 
 [tool.poetry.dev-dependencies]
 django-extensions = "^3.1.5"
 pre-commit = "^2.19.0"
 autopep8 = "^1.6.0"
 isort = "^5.10.1"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+pytest = "^7.1.2"
+pytest-django = "^4.5.2"
+pytest-cov = "^3.0.0"
+model_bakery = "^1.5.0"
+django-mock-queries = "^2.1.7"
+ipython = "^8.4.0"
 
 [tool.pytest]
 addopts="-vv"
 python_files = "test_*.py *_tests.py"
 DJANGO_SETTINGS_MODULE = "project.settings.base"
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
