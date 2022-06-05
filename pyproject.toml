@@ -13,7 +13,8 @@ djangorestframework = "^3.13.1"
 six = "^1.16.0"
 idna = "^3.3"
 django-phonenumber-field = "^6.1.0"
-django-language-field = "^0.0.3"
+phonenumbers = "^8.12.49"
+babel = "^2.10.1"
 
 [tool.poetry.dev-dependencies]
 django-extensions = "^3.1.5"
