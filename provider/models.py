@@ -9,9 +9,7 @@ class Language(models.Model):
 
 
 class Provider(models.Model):
-
     name = models.CharField(max_length=123, blank=False)
     email = models.EmailField(max_length=123, blank=False)
-
     phone = PhoneNumberField()
     language = LanguageField()
