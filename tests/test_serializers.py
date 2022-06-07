@@ -1,28 +1,29 @@
 import pytest
 from model_bakery import baker
 
-from provider.api.serializers import ProviderSerializer
-from provider.models import Provider
+from provider.api.serializers import (CreateServiceAreaSerializer,
+                                      ProviderSerializer)
+from provider.models import Provider, ServiceArea
 
 
 class TestProviderSerializer:
 
+    provider = baker.prepare(Provider, phone="+542494377777", email="test@email.com")
+
     def test_serialize(self):
-        provider = baker.prepare(Provider, phone="+542494377777")
-        serializer = ProviderSerializer(provider)
+        serializer = ProviderSerializer(self.provider)
 
         assert serializer.data
 
     def test_deserialize(self):
-        provider = baker.prepare(Provider, phone="+542494377777", email="test@email.com")
         provider_fields = [field.name for field in Provider._meta.get_fields()]
         valid_serialized_data = {
-            k: v for (k, v) in provider.__dict__.items() if k in provider_fields and k != "id"
+            k: v for (k, v) in self.provider.__dict__.items() if k in provider_fields and k != "id"
         } | {"phone": "+542494377777"}
 
         serializer = ProviderSerializer(data=valid_serialized_data)
 
-        assert serializer.is_valid(raise_exception=True)
+        assert serializer.is_valid()
         assert serializer.errors == {}
 
 
@@ -32,14 +33,33 @@ class TestProviderSerializer:
         {"language": "breakinglanguage"},
         {"currency": "breakingcurrency"},
     ))
-    def test_deserialize(self, wrong_field: dict):
-        provider = baker.prepare(Provider, phone="+542494377777", email="test@email.com")
+    def test_deserialize_fails(self, wrong_field: dict):
         provider_fields = [field.name for field in Provider._meta.get_fields()]
         valid_serialized_data = {
-            k: v for (k, v) in provider.__dict__.items() if k in provider_fields and k != "id"
+            k: v for (k, v) in self.provider.__dict__.items() if k in provider_fields and k != "id"
         } | {"phone": "+542494377777"} | wrong_field
 
         serializer = ProviderSerializer(data=valid_serialized_data)
 
         assert not serializer.is_valid()
         assert serializer.errors != {}
+
+class TestCreateServiceAreaSerializer:
+
+    service_area = baker.prepare(ServiceArea, provider_id=1)
+
+    def test_serialize(self):
+        serializer = CreateServiceAreaSerializer(self.service_area)
+
+        assert serializer.data
+
+    def test_deserialize(self):
+        service_area_fields = [field.name for field in ServiceArea._meta.get_fields()]
+        valid_serialized_data = {
+            k: v for (k, v) in self.service_area.__dict__.items() if k in service_area_fields and k != "id"
+        } | {"price": float(self.service_area.price)}
+
+        serializer = CreateServiceAreaSerializer(data=valid_serialized_data)
+
+        assert serializer.is_valid()
+        assert serializer.errors == {}
