@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     # Third party apps
     "corsheaders",
     "phonenumber_field",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
