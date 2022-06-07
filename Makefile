@@ -37,7 +37,7 @@ check.print:
 	./checks.sh
 
 test:
-	pytest -x --cov -vv
+	pytest -x --cov -vv --cov-config=.coveragerc
 
 shell:
 	python manage.py shell_plus --ipython
