@@ -14,7 +14,7 @@ class Provider(models.Model):
     )
 
 class ServiceArea(models.Model):
-    provider = models.OneToOneField(Provider, on_delete=models.CASCADE, null=False)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=123)
     price = models.DecimalField(decimal_places=2, max_digits=15, null=False)
     geojson = models.JSONField(null=False)
