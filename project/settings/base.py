@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "provider.apps.ProviderConfig",
     # Third party apps
     "corsheaders",
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
