@@ -27,8 +27,8 @@ class ServiceAreaSerializer(serializers.ModelSerializer):
         model = ServiceArea
 
 
-class CreateServiceAreaSerializer(serializers.ModelSerializer):
+class CreateUpdateServiceAreaSerializer(ServiceAreaSerializer):
     provider_id = serializers.PrimaryKeyRelatedField(read_only=True)
-    
+
     class Meta(ServiceAreaSerializer.Meta):
-        exclude = ('id', 'provider')
+        exclude = ('provider', 'id')

@@ -1,7 +1,7 @@
 import pytest
 from model_bakery import baker
 
-from provider.api.serializers import (CreateServiceAreaSerializer,
+from provider.api.serializers import (CreateUpdateServiceAreaSerializer,
                                       ProviderSerializer)
 from provider.models import Provider, ServiceArea
 
@@ -44,12 +44,12 @@ class TestProviderSerializer:
         assert not serializer.is_valid()
         assert serializer.errors != {}
 
-class TestCreateServiceAreaSerializer:
+class TestCreateUpdateServiceAreaSerializer:
 
     service_area = baker.prepare(ServiceArea, provider_id=1)
 
     def test_serialize(self):
-        serializer = CreateServiceAreaSerializer(self.service_area)
+        serializer = CreateUpdateServiceAreaSerializer(self.service_area)
 
         assert serializer.data
 
@@ -59,7 +59,7 @@ class TestCreateServiceAreaSerializer:
             k: v for (k, v) in self.service_area.__dict__.items() if k in service_area_fields and k != "id"
         } | {"price": float(self.service_area.price)}
 
-        serializer = CreateServiceAreaSerializer(data=valid_serialized_data)
+        serializer = CreateUpdateServiceAreaSerializer(data=valid_serialized_data)
 
         assert serializer.is_valid()
         assert serializer.errors == {}
