@@ -23,13 +23,9 @@ class ProviderSerializer(serializers.ModelSerializer):
 
 
 class ServiceAreaSerializer(serializers.ModelSerializer):
+    provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all())
 
     class Meta:
         model = ServiceArea
-
-
-class CreateUpdateServiceAreaSerializer(ServiceAreaSerializer):
-    provider_id = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    class Meta(ServiceAreaSerializer.Meta):
-        exclude = ('provider', 'id')
+        read_only_fields = ('id',)
+        fields = ('provider', 'name', 'price', 'geojson')
