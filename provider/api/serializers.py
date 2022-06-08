@@ -17,7 +17,8 @@ class ProviderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: Provider):
         data = super().to_representation(instance)
-        data["phone"] = str(instance.phone)
+        if data.get("phone", False):
+            data["phone"] = str(data["phone"])
         return data
 
 
