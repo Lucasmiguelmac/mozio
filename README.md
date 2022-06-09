@@ -1,3 +1,8 @@
+# Setup
+```sh
+docker-compose up
+```
+
 # Available endpoints
 ```
 | Endpoint                  | Allowed Methods         |
