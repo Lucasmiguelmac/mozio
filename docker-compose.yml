@@ -21,7 +21,7 @@ services:
   
     database:
         container_name: mozio_db
-        image: postgres:12.0-alpine
+        image: postgis/postgis:12-3.2-alpine
         restart: unless-stopped
         volumes:
         - postgres_data:/var/lib/postgresql/data/

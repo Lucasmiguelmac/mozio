@@ -7,20 +7,21 @@ from model_bakery import baker
 from rest_framework.serializers import ModelSerializer
 
 from provider.api.serializers import ProviderSerializer, ServiceAreaSerializer
-from provider.api.views import ProviderModelViewset, ServiceAreaModelViewset
+from provider.api.views import (AvailableProvidersApiView,
+                                ProviderModelViewset, ServiceAreaModelViewset)
 from provider.models import Provider, ServiceArea
 
 provider_fields = [
     field.name for field in Provider._meta.get_fields()
-    if (not field.name in ProviderSerializer.Meta.exclude and field.name != "servicearea")
+    if (not field.name in ProviderSerializer.Meta.exclude and field.name != "service_area")
 ]
 
+prepare_provider = (lambda self=None: baker.prepare(
+    Provider, phone="+542494377777", email="test@email.com"
+))
 
 class TestProviderViewset:
 
-    prepare_provider = (lambda self=None: baker.prepare(
-        Provider, phone="+542494377777", email="test@email.com"
-    ))
     provider_1 = prepare_provider()
     valid_data_dict = {
         k: v for (k, v) in provider_1.__dict__.items() if k in provider_fields
@@ -30,8 +31,8 @@ class TestProviderViewset:
         # Arrange
         qs = MockSet(
             self.provider_1,
-            self.prepare_provider(),
-            self.prepare_provider(),
+            prepare_provider(),
+            prepare_provider(),
         )
         url = reverse('provider-list')
         request = rf.get(url)
@@ -230,7 +231,8 @@ class TestServiceAreaModelViewset:
         save_mock.assert_called()
 
     def test_update(self, mocker, rf):
-        url = reverse('servicearea-detail', kwargs={'pk': self.service_area_1.id})
+        url = reverse('servicearea-detail',
+                      kwargs={'pk': self.service_area_1.id})
         request = rf.put(
             url,
             content_type='application/json',
@@ -302,7 +304,8 @@ class TestServiceAreaModelViewset:
         save_mock.assert_called()
 
     def test_delete(self, mocker, rf):
-        url = reverse('servicearea-detail', kwargs={'pk': self.service_area_1.id})
+        url = reverse('servicearea-detail',
+                      kwargs={'pk': self.service_area_1.id})
         request = rf.delete(url)
         mocker.patch.object(
             ServiceAreaModelViewset, 'get_object', return_value=self.service_area_1
@@ -318,3 +321,27 @@ class TestServiceAreaModelViewset:
 
         assert response.status_code == 204
         del_mock.assert_called()
+
+
+class TestAvailableProvidersApiView:
+
+    provider = prepare_provider()
+    valid_data_dict = {
+        k: v for (k, v) in provider.__dict__.items() if k in provider_fields
+    } | {"phone": str(provider.phone)}
+
+    def test_retrieve(self, mocker, rf):
+        url = reverse('available-providers')
+        lat, lng = 10.000000, 20.000000
+        request = rf.get(f"{url}?lat={lat}&lng={lng}")
+        qs = MockSet(prepare_provider(), prepare_provider())
+        
+        mocker.patch.object(
+            AvailableProvidersApiView,
+            'get_queryset',
+            return_value=qs
+        )
+
+        response = AvailableProvidersApiView.as_view()(request)
+
+        assert response.status_code == 200

@@ -28,4 +28,4 @@ class ServiceAreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceArea
         read_only_fields = ('id',)
-        fields = ('provider', 'name', 'price', 'geojson')
+        fields = ('provider', 'name', 'price', 'area')

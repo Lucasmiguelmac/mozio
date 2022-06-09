@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "phonenumber_field",
     "rest_framework",
+    'rest_framework_gis',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,7 @@ ASGI_APPLICATION = "project.asgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE"),
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.environ.get("SQL_DATABASE"),
         "USER": os.environ.get("SQL_USER"),
         "PASSWORD": os.environ.get("SQL_PASSWORD"),

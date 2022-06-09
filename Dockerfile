@@ -23,6 +23,10 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock /app/
 COPY .pre-commit-config.yaml .
 RUN if [ "$ENV" != "dev" ]; then poetry install --no-dev; else poetry install && git init . && pre-commit install-hooks; fi
-RUN apt-get update -y && apt-get install -y build-essential
+RUN apt-get update -y && apt-get install -y \
+    # Makefile support
+    build-essential \
+    # GDAL
+    binutils libproj-dev gdal-bin python3-gdal
 
 COPY . .
