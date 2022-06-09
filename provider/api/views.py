@@ -2,6 +2,7 @@ from django.contrib.gis.geos import Point
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import status
+from rest_framework.exceptions import APIException
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -28,6 +29,12 @@ class ServiceAreaModelViewset(ModelViewSet):
         return super().dispatch(request, *args, **kwargs)
 
 
+class MissingParameters(APIException):
+    status_code = 400
+    default_detail = 'Query params missing for "lat"(latitude) and/or "lng" (longitude)'
+    default_code = 'missing_query_params'
+
+
 class AvailableProvidersApiView(ListAPIView):
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
@@ -38,11 +45,15 @@ class AvailableProvidersApiView(ListAPIView):
 
     def get_queryset(self):
         lat, lng = (
-            float(self.request.GET["lat"]),
-            float(self.request.GET["lng"])
+            float(self.request.GET.get("lat", False)),
+            float(self.request.GET.get("lng", False))
         )
-        point = Point(lat, lng)
-        providers = Provider.objects.filter(
-            service_area__area__contains=point
-        )
-        return providers
+        providers = None
+        if lat and lng:
+            point = Point(lat, lng)
+            providers = Provider.objects.filter(
+                service_area__area__contains=point
+            )
+            return providers
+        else:
+            raise MissingParameters()
