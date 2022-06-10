@@ -1,6 +1,6 @@
 FROM python:3-slim AS development_build
 
-ARG ENV=prod
+ARG ENV=dev
 ENV ENV=$ENV \
   # python:
   PYTHONFAULTHANDLER=1 \
@@ -30,7 +30,3 @@ RUN apt-get update -y && apt-get install -y \
     binutils libproj-dev gdal-bin python3-gdal
 
 COPY . .
-
-EXPOSE 8000
-
-CMD ["make", "dev"]

@@ -1,15 +1,15 @@
 import os
+from distutils.util import strtobool
 from pathlib import Path
-
-allowed_hosts: str = os.environ.get("ALLOWED_HOSTS") or "*"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = os.environ.get("DEBUG")
+DEBUG = strtobool(os.environ.get("DEBUG"))
 
-ALLOWED_HOSTS = [el for el in allowed_hosts.split(",")]
+allowed_hosts: str = os.environ.get("ALLOWED_HOSTS") or "*"
+ALLOWED_HOSTS = allowed_hosts.split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     # Project apps
     "provider.apps.ProviderConfig",
     # Third party apps
-    "corsheaders",
     "phonenumber_field",
     "rest_framework",
     'rest_framework_gis',
@@ -30,7 +29,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -95,6 +93,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
