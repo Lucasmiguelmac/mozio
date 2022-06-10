@@ -13,3 +13,8 @@ docker-compose up
 | /api/service_areas/<pk>   | GET, PUT, PATCH, DELETE |
 | /api/available-providers/ | GET                     |
 ```
+
+# Live project
+http://18.233.63.66:8000/
+
+Docs: http://18.233.63.66:8000/docs/
